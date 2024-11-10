@@ -6,15 +6,23 @@ class PersonRepository {
 
   PersonRepository(this._personBox);
 
-  List<Person> getAll() => _personBox.getAll();
+  Future<List<Person>> getAll() async {
+    return _personBox.getAll();
+  }
 
-  Person? getByPersonalNumber(String personalNumber) {
+  Future<Person?> getByPersonalNumber(String personalNumber) async {
     return _personBox.query(Person_.personalNumber.equals(personalNumber)).build().findFirst();
   }
 
-  void add(Person person) => _personBox.put(person);
+  Future<void> add(Person person) async {
+    _personBox.put(person);
+  }
 
-  void update(Person person) => _personBox.put(person);
+  Future<void> update(Person person) async {
+    _personBox.put(person);
+  }
 
-  void delete(int id) => _personBox.remove(id);
+  Future<void> delete(int id) async {
+    _personBox.remove(id);
+  }
 }

@@ -6,13 +6,23 @@ class ParkingSpaceRepository {
 
   ParkingSpaceRepository(this._parkingSpaceBox);
 
-  List<ParkingSpace> getAll() => _parkingSpaceBox.getAll();
+  Future<List<ParkingSpace>> getAll() async {
+    return _parkingSpaceBox.getAll();
+  }
 
-  ParkingSpace? getById(int id) => _parkingSpaceBox.get(id);
+  Future<ParkingSpace?> getById(int id) async {
+    return _parkingSpaceBox.get(id);
+  }
 
-  void add(ParkingSpace parkingSpace) => _parkingSpaceBox.put(parkingSpace);
+  Future<void> add(ParkingSpace parkingSpace) async {
+    _parkingSpaceBox.put(parkingSpace);
+  }
 
-  void update(ParkingSpace parkingSpace) => _parkingSpaceBox.put(parkingSpace);
+  Future<void> update(ParkingSpace parkingSpace) async {
+    _parkingSpaceBox.put(parkingSpace);
+  }
 
-  void delete(int id) => _parkingSpaceBox.remove(id);
+  Future<void> delete(int id) async {
+    _parkingSpaceBox.remove(id);
+  }
 }

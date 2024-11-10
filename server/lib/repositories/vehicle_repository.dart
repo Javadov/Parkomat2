@@ -6,15 +6,23 @@ class VehicleRepository {
 
   VehicleRepository(this._vehicleBox);
 
-  List<Vehicle> getAll() => _vehicleBox.getAll();
+  Future<List<Vehicle>> getAll() async {
+    return _vehicleBox.getAll();
+  }
 
-  Vehicle? getByRegistrationNumber(String registrationNumber) {
+  Future<Vehicle?> getByRegistrationNumber(String registrationNumber) async {
     return _vehicleBox.query(Vehicle_.registrationNumber.equals(registrationNumber)).build().findFirst();
   }
 
-  void add(Vehicle vehicle) => _vehicleBox.put(vehicle);
+  Future<void> add(Vehicle vehicle) async {
+    _vehicleBox.put(vehicle);
+  }
 
-  void update(Vehicle vehicle) => _vehicleBox.put(vehicle);
+  Future<void> update(Vehicle vehicle) async {
+    _vehicleBox.put(vehicle);
+  }
 
-  void delete(int id) => _vehicleBox.remove(id);
+  Future<void> delete(int id) async {
+    _vehicleBox.remove(id);
+  }
 }

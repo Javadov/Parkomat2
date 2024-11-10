@@ -12,14 +12,14 @@ class PersonHandler {
   Router get router {
     final router = Router();
 
-    router.get('/', (Request request) {
-      final persons = repository.getAll();
+    router.get('/', (Request request) async {
+      final persons = await repository.getAll();
       final response = jsonEncode(persons.map((person) => person.toJson()).toList());
       return Response.ok(response, headers: {'Content-Type': 'application/json'});
     });
 
-    router.get('/<personalNumber>', (Request request, String personalNumber) {
-      final person = repository.getByPersonalNumber(personalNumber);
+    router.get('/<personalNumber>', (Request request, String personalNumber) async {
+      final person = await repository.getByPersonalNumber(personalNumber);
       if (person != null) {
         return Response.ok(jsonEncode(person.toJson()), headers: {'Content-Type': 'application/json'});
       } else {
@@ -28,25 +28,29 @@ class PersonHandler {
     });
 
     router.post('/', (Request request) async {
-      final payload = await request.readAsString();
-      final data = jsonDecode(payload);
-      final person = Person.fromJson(data);
-      repository.add(person);
-      return Response.ok(jsonEncode(person.toJson()), headers: {'Content-Type': 'application/json'});
+      try {
+        final payload = await request.readAsString();
+        final data = jsonDecode(payload);
+        final person = Person.fromJson(data);
+        await repository.add(person);
+        return Response.ok(jsonEncode(person.toJson()), headers: {'Content-Type': 'application/json'});
+      } catch (e) {
+        return Response.internalServerError(body: 'Failed to add person');
+      }
     });
 
     router.put('/<personalNumber>', (Request request, String personalNumber) async {
       final payload = await request.readAsString();
       final data = jsonDecode(payload);
       final updatedPerson = Person.fromJson(data);
-      repository.update(updatedPerson);
+      await repository.update(updatedPerson);
       return Response.ok(jsonEncode(updatedPerson.toJson()), headers: {'Content-Type': 'application/json'});
     });
 
-    router.delete('/<personalNumber>', (Request request, String personalNumber) {
-      final person = repository.getByPersonalNumber(personalNumber);
+    router.delete('/<personalNumber>', (Request request, String personalNumber) async {
+      final person = await repository.getByPersonalNumber(personalNumber);
       if (person != null) {
-        repository.delete(person.id);
+        await repository.delete(person.id);
         return Response.ok('Person deleted');
       } else {
         return Response.notFound('Person not found');

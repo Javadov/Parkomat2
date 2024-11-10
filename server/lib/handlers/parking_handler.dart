@@ -12,14 +12,14 @@ class ParkingHandler {
   Router get router {
     final router = Router();
 
-    router.get('/', (Request request) {
-      final parkings = repository.getAll();
+    router.get('/', (Request request) async {
+      final parkings = await repository.getAll();
       final response = jsonEncode(parkings.map((parking) => parking.toJson()).toList());
       return Response.ok(response, headers: {'Content-Type': 'application/json'});
     });
 
-    router.get('/<id>', (Request request, String id) {
-      final parking = repository.getById(int.parse(id));
+    router.get('/<id>', (Request request, String id) async {
+      final parking = await repository.getById(int.parse(id));
       if (parking != null) {
         return Response.ok(jsonEncode(parking.toJson()), headers: {'Content-Type': 'application/json'});
       } else {
@@ -31,7 +31,7 @@ class ParkingHandler {
       final payload = await request.readAsString();
       final data = jsonDecode(payload);
       final parking = Parking.fromJson(data);
-      repository.add(parking);
+      await repository.add(parking);
       return Response.ok(jsonEncode(parking.toJson()), headers: {'Content-Type': 'application/json'});
     });
 
@@ -39,14 +39,14 @@ class ParkingHandler {
       final payload = await request.readAsString();
       final data = jsonDecode(payload);
       final updatedParking = Parking.fromJson(data);
-      repository.update(updatedParking);
+      await repository.update(updatedParking);
       return Response.ok(jsonEncode(updatedParking.toJson()), headers: {'Content-Type': 'application/json'});
     });
 
-    router.delete('/<id>', (Request request, String id) {
-      final parking = repository.getById(int.parse(id));
+    router.delete('/<id>', (Request request, String id) async {
+      final parking = await repository.getById(int.parse(id));
       if (parking != null) {
-        repository.delete(parking.id);
+        await repository.delete(parking.id);
         return Response.ok('Parking deleted');
       } else {
         return Response.notFound('Parking not found');
